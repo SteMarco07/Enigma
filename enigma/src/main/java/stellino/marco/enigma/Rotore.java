@@ -1,80 +1,77 @@
 package stellino.marco.enigma;
-import java.util.TreeMap;
+import java.util.ArrayList;
+
 
 public class Rotore {
-    private TreeMap <Character, Character> valori;
+    private final ArrayList<Integer> alphabet;
     private int rotazione;
+    private String letteraRotazione;
 
-    public Rotore(String stringa) {
+    public Rotore(String stringa, String letteraRotazione) {
         stringa = stringa.toLowerCase();
-        this.valori = new TreeMap<>();
-        for (int i = 0; i < stringa.length(); i++) {
-            this.valori.put((char)('a'+ i), stringa.charAt(i));
+        this.alphabet = new ArrayList<>();
+        for (char c : stringa.toCharArray()) {
+            this.alphabet.add(c - 'a');
         }
+        this.letteraRotazione = letteraRotazione.toLowerCase();
         this.rotazione = 0;
+    }
+
+    public void modificaCombinazione(String stringa, String letteraRotazione) {
+        stringa = stringa.toLowerCase();
+        for (char c : stringa.toCharArray()) {
+            this.alphabet.add(c - 'a');
+        }
+        this.letteraRotazione = letteraRotazione.toLowerCase();
     }
 
     /**
      * Calcola l'uscita dato in input in una fase precedente al riflessore
-     * @param lettera Lettera in input (char)
-     * @return Lettera output (char)
+     * @param lettera Lettera in input (String)
+     * @return Lettera output (String)
      */
-    public char get_uscita_dritto( char lettera){
-        return this.valori.get(lettera);
+    public String get_uscita_dritto( String lettera){
+        lettera = lettera.toLowerCase();
+        int i = (lettera.charAt(0) - 'a' + this.rotazione)%26;
+        int uscita = ( alphabet.get(i) - this.rotazione + 26)%26;
+        return String.valueOf((char)('a' + uscita));
     }
 
     /**
      * Calcola l'uscita dato in input in una fase successiva al riflessore
-     * @param lettera Lettera in input (char)
-     * @return Lettera output (char)
+     * @param lettera Lettera in input (String)
+     * @return Lettera output (String)
      */
-    public char get_uscita_inverso(char lettera){
-        for (var i : this.valori.keySet()) {
-            if (lettera == this.valori.get(i)) {
-                return i;
-            }
-        }
-        return ' ';
+    public String get_uscita_inverso(String lettera){
+        lettera = lettera.toLowerCase();
+        int i = (lettera.charAt(0) - 'a' + this.rotazione)%26;
+        int uscita = (alphabet.indexOf(i)- this.rotazione + 26)%26;
+        return String.valueOf((char)('a' + uscita));
     }
 
     /**
      * Funzione che si occupa dell'effettiva rotazione del dizionario valori
      */
-    private void rotazione() {
-        char temp = this.valori.get(this.valori.lastKey());
-        for (char i = 'z'; i >= 'b'; i--) {
-            char valorePrecedente = this.valori.get((char)(i - 1));
-            this.valori.put(i, valorePrecedente);
-        }
-        this.valori.put('a', temp);
-    }
-
-    /**
-     * Gestisce la rotazione dei rotori
-     * @return
-     */
-    public boolean ruota() {
+    public void ruota() {
         this.rotazione++;
-        this.rotazione();
-        if (this.rotazione == 26) {
-            this.rotazione = 0;
-            return true;
-        }
-        return false;
+        this.rotazione %= 26;
     }
 
-    /**
-     * Ritorna il valore intero della rotazione
-     * @return rotazione (int)
-     */
+    public boolean isCambioLettera(){
+        return this.rotazione == this.letteraRotazione.charAt(0) - 'a';
+    }
+
     public int get_rotazione(){
         return this.rotazione;
     }
 
-
-
-
-
+    public void set_rotazione(int v){
+        if ( v >= 0 && v < 26){
+            this.rotazione = v;
+        } else {
+            this.rotazione = 0;
+        }
+    }
 
 
 }
