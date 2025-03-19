@@ -10,12 +10,19 @@ public class Rotore {
     public Rotore(String stringa, String letteraRotazione) {
         stringa = stringa.toLowerCase();
         this.alphabet = new ArrayList<>();
-        for (int i = 0; i < stringa.length(); i++) {
-            this.alphabet.add((int)stringa.charAt(i)-'a');
+        for (char c : stringa.toCharArray()) {
+            this.alphabet.add(c - 'a');
         }
-        System.out.println(this.alphabet);
         this.letteraRotazione = letteraRotazione.toLowerCase();
         this.rotazione = 0;
+    }
+
+    public void modificaCombinazione(String stringa, String letteraRotazione) {
+        stringa = stringa.toLowerCase();
+        for (char c : stringa.toCharArray()) {
+            this.alphabet.add(c - 'a');
+        }
+        this.letteraRotazione = letteraRotazione.toLowerCase();
     }
 
     /**
@@ -50,15 +57,21 @@ public class Rotore {
         this.rotazione %= 26;
     }
 
-    private boolean isCambioLettera(){
+    public boolean isCambioLettera(){
         return this.rotazione == this.letteraRotazione.charAt(0) - 'a';
     }
 
+    public int get_rotazione(){
+        return this.rotazione;
+    }
 
-
-
-
-
+    public void set_rotazione(int v){
+        if ( v >= 0 && v < 26){
+            this.rotazione = v;
+        } else {
+            this.rotazione = 0;
+        }
+    }
 
 
 }
