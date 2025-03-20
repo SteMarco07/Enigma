@@ -48,8 +48,43 @@ public class Enigma {
         }
     }
 
-    public void modificaCombinazione (int nRotore, int nCombinazione) {
+    public void modificaCombinazioneRotore (int nRotore, int nCombinazione) {
         this.rotori.get(nRotore).modificaCombinazione(this.combinazioniRotori.get(nCombinazione)[0], combinazioniRotori.get(nCombinazione)[1]);
+    }
+
+    public void modificaCombinazioneRiflessori (int nCombinazione) {
+        this.riflessore.modificaCombinazione(this.combinazioniRiflessori.get(nCombinazione));
+    }
+
+    public void ruota() {
+        this.rotori.getFirst().ruota();
+        if (this.rotori.getFirst().isCambioLettera()) {
+            this.rotori.get(1).ruota();
+            if (this.rotori.get(1).isCambioLettera()) {
+                this.rotori.get(2).ruota();
+            }
+        }
+        System.out.println("r1: " + this.rotori.getFirst().getRotazione() + " r2: " + this.rotori.get(1).getRotazione() + " r3: " + this.rotori.getLast().getRotazione());
+    }
+
+
+    private String criptaAvanti(String lettera) {
+        for (var i : this.rotori) {
+            lettera = i.criptaAvanti(lettera);
+        }
+        return lettera;
+    }
+
+    private String criptaIndietro(String lettera) {
+        for (int i = this.rotori.size() - 1; i >= 0; i--) {
+            lettera = this.rotori.get(i).criptaIndietro(lettera);
+        }
+        return lettera;
+    }
+
+    public String cripta(String lettera) {
+
+        return this.criptaIndietro(this.riflessore.cripta(this.criptaAvanti(lettera)));
     }
 
 
