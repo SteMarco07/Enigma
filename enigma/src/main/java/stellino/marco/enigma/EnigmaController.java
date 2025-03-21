@@ -4,24 +4,26 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.transform.Rotate;
 
+import java.io.IOException;
+
 public class EnigmaController {
     @FXML
     private Label welcomeText;
     @FXML
-    private Rotore rotore;
+    private Enigma enigma;
 
 
     @FXML
-    public void initialize() {
-        rotore = new Rotore("EKMFLGDQVZNTOWYHXUSPAIBRCJ");
+    public void initialize() throws IOException {
+        enigma = new Enigma("file/combinazioniRotori.csv", "file/combinazioniRiflessori.csv");
     }
 
 
 
     @FXML
     protected void onHelloButtonClick() {
-        this.rotore.ruota();
-        String stringa = (char)(this.rotore.get_uscita_dritto('a')) + " numero: " + this.rotore.get_rotazione();
+        this.enigma.ruota();
+        String stringa = enigma.cripta("a");
         welcomeText.setText(stringa);
 
     }
