@@ -15,6 +15,7 @@ public class Riflessore {
     public String cripta(String lettera) {
         lettera = lettera.toLowerCase();
         int uscita = alphabet.get(lettera.charAt(0) - 'a');
+        //System.out.println((char)('a' + uscita));
         return String.valueOf((char)('a' + uscita));
     }
 

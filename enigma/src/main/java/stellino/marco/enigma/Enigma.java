@@ -9,9 +9,10 @@ import java.util.ArrayList;
 
 public class Enigma {
     private ArrayList<Rotore> rotori;
-    ArrayList<String[]> combinazioniRotori;
-    ArrayList<String> combinazioniRiflessori;
     private Riflessore riflessore;
+    private final ArrayList<String[]> combinazioniRotori;
+    private final ArrayList<String> combinazioniRiflessori;
+
 
 
 
@@ -64,7 +65,7 @@ public class Enigma {
                 this.rotori.get(2).ruota();
             }
         }
-        System.out.println("r1: " + this.rotori.getFirst().getRotazione() + " r2: " + this.rotori.get(1).getRotazione() + " r3: " + this.rotori.getLast().getRotazione());
+        //System.out.println("r1: " + this.rotori.getFirst().getRotazione() + " r2: " + this.rotori.get(1).getRotazione() + " r3: " + this.rotori.getLast().getRotazione());
     }
 
 

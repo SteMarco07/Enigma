@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 
 public class Rotore {
-    private final ArrayList<Integer> alphabet;
+    private ArrayList<Integer> alphabet;
     private int rotazione;
     private char letteraRotazione;
 
@@ -25,7 +25,7 @@ public class Rotore {
         for (char c : stringa.toCharArray()) {
             this.alphabet.add(c - 'a');
         }
-        this.letteraRotazione = this.letteraRotazione = (char)(letteraRotazione.toLowerCase().charAt(0) - 'a');;
+        this.letteraRotazione = (char)(letteraRotazione.toLowerCase().charAt(0) - 'a');;
     }
 
     /**
@@ -37,7 +37,7 @@ public class Rotore {
         lettera = lettera.toLowerCase();
         int i = (lettera.charAt(0) - 'a' + this.rotazione)%26;
         int uscita = ( alphabet.get(i) - this.rotazione + 26)%26;
-        System.out.println((char)('a' + uscita));
+        //System.out.println((char)('a' + uscita));
         return String.valueOf((char)('a' + uscita));
     }
 
@@ -50,7 +50,7 @@ public class Rotore {
         lettera = lettera.toLowerCase();
         int i = (lettera.charAt(0) - 'a' + this.rotazione)%26;
         int uscita = (alphabet.indexOf(i)- this.rotazione + 26)%26;
-        System.out.println((char)('a' + uscita));
+        //System.out.println((char)('a' + uscita));
         return String.valueOf((char)('a' + uscita));
     }
 
