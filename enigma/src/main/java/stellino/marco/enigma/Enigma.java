@@ -5,12 +5,14 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.TreeMap;
 
 
 public class Enigma {
     private ArrayList<Rotore> rotori;
     private Riflessore riflessore;
-    private final ArrayList<String[]> combinazioniRotori;
+    private final TreeMap<String, ArrayList<String>> combinazioniRotori;
     private final ArrayList<String> combinazioniRiflessori;
 
 
@@ -18,15 +20,15 @@ public class Enigma {
 
     public Enigma(String pRotori, String pRiflessori) throws IOException, FileNotFoundException {
         this.rotori = new ArrayList<>();
-        this.combinazioniRotori = new ArrayList<>();
+        this.combinazioniRotori = new TreeMap<>();
         this.combinazioniRiflessori = new ArrayList<>();
         this.caricaRotori(pRotori);
         this.caricaRiflessori(pRiflessori);
-        this.rotori.add(new Rotore(this.combinazioniRotori.get(0)[0], this.combinazioniRotori.get(0)[1]));
-        this.rotori.add(new Rotore(this.combinazioniRotori.get(1)[0], this.combinazioniRotori.get(1)[1]));
-        this.rotori.add(new Rotore( this.combinazioniRotori.get(2)[0], this.combinazioniRotori.get(2)[1]));
+        this.rotori.add(new Rotore(this.combinazioniRotori.get("I").getFirst(), this.combinazioniRotori.get("I").getLast()));
+        this.rotori.add(new Rotore(this.combinazioniRotori.get("II").getFirst(), this.combinazioniRotori.get("II").getLast()));
+        this.rotori.add(new Rotore(this.combinazioniRotori.get("III").getFirst(), this.combinazioniRotori.get("III").getLast()));
         this.riflessore = new Riflessore(this.combinazioniRiflessori.getFirst());
-
+        //System.out.println(this.combinazioniRotori);
 
     }
 
@@ -34,10 +36,14 @@ public class Enigma {
     private void caricaRotori(String percorso) throws IOException, FileNotFoundException {
         BufferedReader br = new BufferedReader( new FileReader(percorso));
         String riga;
-        String[] elementi;
         while ((riga = br.readLine()) != null) {
+            String[] elementi;
+            ArrayList<String> dati = new ArrayList<>();
             elementi = riga.split(";");
-            this.combinazioniRotori.add(elementi);
+            dati.add(elementi[1]);
+            dati.add(elementi[2]);
+            this.combinazioniRotori.put(elementi[0], dati);
+
         }
     }
 
@@ -49,8 +55,8 @@ public class Enigma {
         }
     }
 
-    public void modificaCombinazioneRotore (int nRotore, int nCombinazione) {
-        this.rotori.get(nRotore).modificaCombinazione(this.combinazioniRotori.get(nCombinazione)[0], combinazioniRotori.get(nCombinazione)[1]);
+    public void modificaCombinazioneRotore (int nRotore, String combinazione) {
+        this.rotori.get(nRotore).modificaCombinazione(this.combinazioniRotori.get(combinazione).getFirst(), combinazioniRotori.get(combinazione).getLast());
     }
 
     public void modificaCombinazioneRiflessori (int nCombinazione) {
