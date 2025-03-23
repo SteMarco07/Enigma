@@ -4,9 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.TreeMap;
+import java.util.*;
 
 
 public class Enigma {
@@ -46,6 +44,7 @@ public class Enigma {
             this.combinazioniRotori.put(elementi[0], dati);
 
         }
+        br.close();
     }
 
     private void caricaRiflessori(String percorso) throws IOException, FileNotFoundException {
@@ -56,14 +55,18 @@ public class Enigma {
             elementi = riga.split(";");
             this.combinazioniRiflessori.put(elementi[0], elementi[1]);
         }
+        br.close();
     }
 
     public void modificaCombinazioneRotore (int nRotore, String combinazione) {
         this.rotori.get(nRotore).modificaCombinazione(this.combinazioniRotori.get(combinazione).getFirst(), combinazioniRotori.get(combinazione).getLast());
+        //System.out.println(this.combinazioniRotori);
     }
 
-    public void modificaCombinazioneRiflessori (int nCombinazione) {
-        this.riflessore.modificaCombinazione(this.combinazioniRiflessori.get(nCombinazione));
+    public void modificaCombinazioneRiflessori (String combinazione) {
+        this.riflessore.modificaCombinazione(this.combinazioniRiflessori.get(combinazione));
+        //System.out.println(this.combinazioniRiflessori);
+
     }
 
     public void ruota() {
@@ -95,6 +98,14 @@ public class Enigma {
     public String cripta(String lettera) {
 
         return this.criptaIndietro(this.riflessore.cripta(this.criptaAvanti(lettera)));
+    }
+
+    public Set<String> getCombinazioniRiflessori() {
+        return this.combinazioniRiflessori.keySet();
+    }
+
+    public Set<String> getCombinazioniRotori() {
+        return this.combinazioniRotori.keySet();
     }
 
 
