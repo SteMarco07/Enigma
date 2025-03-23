@@ -13,7 +13,7 @@ public class Enigma {
     private ArrayList<Rotore> rotori;
     private Riflessore riflessore;
     private final TreeMap<String, ArrayList<String>> combinazioniRotori;
-    private final ArrayList<String> combinazioniRiflessori;
+    private final TreeMap<String , String> combinazioniRiflessori;
 
 
 
@@ -21,14 +21,15 @@ public class Enigma {
     public Enigma(String pRotori, String pRiflessori) throws IOException, FileNotFoundException {
         this.rotori = new ArrayList<>();
         this.combinazioniRotori = new TreeMap<>();
-        this.combinazioniRiflessori = new ArrayList<>();
+        this.combinazioniRiflessori = new TreeMap<>();
         this.caricaRotori(pRotori);
         this.caricaRiflessori(pRiflessori);
         this.rotori.add(new Rotore(this.combinazioniRotori.get("I").getFirst(), this.combinazioniRotori.get("I").getLast()));
         this.rotori.add(new Rotore(this.combinazioniRotori.get("II").getFirst(), this.combinazioniRotori.get("II").getLast()));
         this.rotori.add(new Rotore(this.combinazioniRotori.get("III").getFirst(), this.combinazioniRotori.get("III").getLast()));
-        this.riflessore = new Riflessore(this.combinazioniRiflessori.getFirst());
+        this.riflessore = new Riflessore(this.combinazioniRiflessori.get("A"));
         //System.out.println(this.combinazioniRotori);
+        //System.out.println(this.combinazioniRiflessori);
 
     }
 
@@ -51,7 +52,9 @@ public class Enigma {
         BufferedReader br = new BufferedReader( new FileReader(percorso));
         String riga;
         while ((riga = br.readLine()) != null) {
-            this.combinazioniRiflessori.add(riga);
+            String[] elementi;
+            elementi = riga.split(";");
+            this.combinazioniRiflessori.put(elementi[0], elementi[1]);
         }
     }
 
