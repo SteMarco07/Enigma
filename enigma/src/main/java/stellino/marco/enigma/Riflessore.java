@@ -11,7 +11,7 @@ public class Riflessore {
         for (char c : combinazione.toCharArray()) {
             this.alphabet.add(c-'a');
         }
-        System.out.println(alphabet);
+        //System.out.println(alphabet);
     }
 
     public char cripta(char lettera) {
