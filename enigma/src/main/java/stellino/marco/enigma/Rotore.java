@@ -25,8 +25,8 @@ public class Rotore {
         for (char c : stringa.toCharArray()) {
             this.alphabet.add(c - 'a');
         }
-
         this.letteraRotazione = (char)(letteraRotazione.toLowerCase().charAt(0) - 'a');;
+        this.rotazione = 0;
 
     }
 
@@ -72,11 +72,23 @@ public class Rotore {
         return this.rotazione;
     }
 
-    public void setRotazione(int v){
-        if ( v >= 0 && v < 26){
-            this.rotazione = v;
+    public void setRotazione(int r){
+        if ( r >= 0 && r < 26){
+            this.rotazione = r;
         } else {
             this.rotazione = 0;
+        }
+    }
+
+    public void setRotazione(boolean aumenta){
+        if (aumenta){
+            this.rotazione++;
+            this.rotazione %= 26;
+        } else {
+            this.rotazione--;
+            if (this.rotazione == -1){
+                this.rotazione = 25;
+            }
         }
     }
 

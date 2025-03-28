@@ -107,5 +107,17 @@ public class Enigma {
         return this.combinazioniRotori.keySet();
     }
 
+    public int getRotazoine(int n_rotore) {
+        return this.rotori.get(n_rotore).getRotazione();
+    }
+
+    public void setRotazoine(int n_rotore, int rotazine) {
+        this.rotori.get(n_rotore).setRotazione(rotazine);
+    }
+
+    public void setRotazoine(int n_rotore, boolean aumenta) {
+        this.rotori.get(n_rotore).setRotazione(aumenta);
+    }
+
 
 }

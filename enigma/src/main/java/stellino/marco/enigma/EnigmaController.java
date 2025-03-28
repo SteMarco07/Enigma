@@ -20,7 +20,8 @@ public class EnigmaController {
 
     @FXML
     private ChoiceBox<String> chbRiflector, chbRotor1, chbRotor2, chbRotor3;
-
+    @FXML
+    private Label lblReflector, lblPosR1, lblPosR2, lblPosR3;
     @FXML
     private GridPane gridLamps;
     @FXML
@@ -44,7 +45,14 @@ public class EnigmaController {
         chbRotor2.getSelectionModel().select(1);
         chbRotor3.getItems().setAll(this.enigma.getCombinazioniRotori());
         chbRotor3.getSelectionModel().select(2);
+        aggiornaPosizioni();
 
+    }
+
+    private void aggiornaPosizioni() {
+        lblPosR1.setText(String.valueOf((char)('A' + this.enigma.getRotazoine(0))));
+        lblPosR2.setText(String.valueOf((char)('A' + this.enigma.getRotazoine(1))));
+        lblPosR3.setText(String.valueOf((char)('A' + this.enigma.getRotazoine(2))));
     }
 
     private void gestisciGridButtons(int dim) {
@@ -112,6 +120,7 @@ public class EnigmaController {
             lamp.setFill(Color.WHITE);
         }
         lamps[criptata].setFill(Color.YELLOW);
+        aggiornaPosizioni();
     }
 
     @FXML
@@ -122,33 +131,44 @@ public class EnigmaController {
             buttons[pos].requestFocus();
         }
     }
+
+
     @FXML
     public void onBtnMinusR3(ActionEvent actionEvent) {
+        this.enigma.setRotazoine(2, false);
+        this.aggiornaPosizioni();
     }
 
     @FXML
 
     public void onBtnPlusR3(ActionEvent actionEvent) {
-
+        this.enigma.setRotazoine(2, true);
+        this.aggiornaPosizioni();
 
     }
 
     @FXML
     public void onBtnMinusR2(ActionEvent actionEvent) {
+        this.enigma.setRotazoine(1, false);
+        this.aggiornaPosizioni();
     }
 
     @FXML
     public void onBtnPlusR2(ActionEvent actionEvent) {
-
+        this.enigma.setRotazoine(1, true);
+        this.aggiornaPosizioni();
     }
 
     @FXML
     public void onBtnMinusR1(ActionEvent actionEvent) {
+        this.enigma.setRotazoine(0, false);
+        this.aggiornaPosizioni();
     }
 
     @FXML
     public void onBtnPlusR1(ActionEvent actionEvent) {
-
+        this.enigma.setRotazoine(0, true);
+        this.aggiornaPosizioni();
     }
 
 
