@@ -6,10 +6,12 @@ public class Riflessore {
     private final ArrayList<Integer> alphabet;
 
     public Riflessore(String combinazione) {
+        combinazione = combinazione.toLowerCase();
         this.alphabet = new ArrayList<>();
         for (char c : combinazione.toCharArray()) {
             this.alphabet.add(c-'a');
         }
+        System.out.println(alphabet);
     }
 
     public char cripta(char lettera) {
@@ -20,9 +22,13 @@ public class Riflessore {
     }
 
     public void modificaCombinazione(String combinazione) {
+        combinazione = combinazione.toLowerCase();
+        this.alphabet.clear();
         for (char c : combinazione.toCharArray()) {
             this.alphabet.add(c-'a');
         }
+        System.out.println(alphabet);
+
     }
 
 }

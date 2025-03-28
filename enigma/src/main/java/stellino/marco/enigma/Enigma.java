@@ -57,14 +57,14 @@ public class Enigma {
         br.close();
     }
 
-    public void modificaCombinazioneRotore (int nRotore, String combinazione) {
-        this.rotori.get(nRotore).modificaCombinazione(this.combinazioniRotori.get(combinazione).getFirst(), combinazioniRotori.get(combinazione).getLast());
-        //System.out.println(this.combinazioniRotori);
+    public void modificaCombinazioneRotore (int nRotore, String nomeRotore) {
+        this.rotori.get(nRotore).modificaCombinazione(this.combinazioniRotori.get(nomeRotore).getFirst(), combinazioniRotori.get(nomeRotore).getLast());
+        //System.out.println(this.combinazioniRotori.get(nomeRotore).getFirst() + combinazioniRotori.get(nomeRotore).getLast());
     }
 
-    public void modificaCombinazioneRiflessori (String combinazione) {
-        this.riflessore.modificaCombinazione(this.combinazioniRiflessori.get(combinazione));
-        //System.out.println(this.combinazioniRiflessori);
+    public void modificaCombinazioneRiflessori (String nomeRiflessore) {
+        this.riflessore.modificaCombinazione(this.combinazioniRiflessori.get(nomeRiflessore));
+        //System.out.println(this.combinazioniRiflessori.get(nomeRiflessore));
 
     }
 

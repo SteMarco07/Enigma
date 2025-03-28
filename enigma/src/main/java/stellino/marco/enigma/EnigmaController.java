@@ -1,12 +1,10 @@
 package stellino.marco.enigma;
 
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
@@ -46,6 +44,7 @@ public class EnigmaController {
         chbRotor3.getItems().setAll(this.enigma.getCombinazioniRotori());
         chbRotor3.getSelectionModel().select(2);
         aggiornaPosizioni();
+        aggiornaRotoriListener();
 
     }
 
@@ -53,6 +52,26 @@ public class EnigmaController {
         lblPosR1.setText(String.valueOf((char)('A' + this.enigma.getRotazoine(0))));
         lblPosR2.setText(String.valueOf((char)('A' + this.enigma.getRotazoine(1))));
         lblPosR3.setText(String.valueOf((char)('A' + this.enigma.getRotazoine(2))));
+    }
+
+    private void aggiornaRotore(int nRotore, String val) {
+        enigma.modificaCombinazioneRotore(nRotore, val);
+        aggiornaPosizioni();
+    }
+
+    private void aggiornaRotoriListener() {
+        chbRotor1.getSelectionModel().selectedItemProperty().addListener(
+                (obs, oldVal, newVal) -> aggiornaRotore(0, newVal));
+
+        chbRotor2.getSelectionModel().selectedItemProperty().addListener(
+                (obs, oldVal, newVal) -> aggiornaRotore(1, newVal));
+
+        chbRotor3.getSelectionModel().selectedItemProperty().addListener(
+                (obs, oldVal, newVal) -> aggiornaRotore(2, newVal));
+
+        // Listener per il riflettore
+        chbRiflector.getSelectionModel().selectedItemProperty().addListener(
+                (obs, oldVal, newVal) -> enigma.modificaCombinazioneRiflessori(newVal));
     }
 
     private void gestisciGridButtons(int dim) {
