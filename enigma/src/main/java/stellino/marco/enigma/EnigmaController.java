@@ -11,6 +11,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
+import java.io.IOException;
+
 public class EnigmaController {
 
 
@@ -18,14 +20,16 @@ public class EnigmaController {
     private GridPane gridLamps;
     @FXML
     private GridPane gridButtons;
+    private Enigma enigma;
 
     private Button[] buttons;
     private Circle[] lamps;
 
     @FXML
-    public void initialize() {
+    public void initialize() throws IOException{
         gestisciGridButtons(60);
         gestisciGridLamps(25);
+        enigma = new Enigma("file/combinazioniRotori.csv", "file/combinazioniRiflessori.csv");
     }
 
     private void gestisciGridButtons(int dim) {
@@ -103,7 +107,9 @@ public class EnigmaController {
     }
 
     @FXML
+
     public void onBtnPlusR3(ActionEvent actionEvent) {
+
 
     }
 

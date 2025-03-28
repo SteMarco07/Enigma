@@ -13,9 +13,6 @@ public class Enigma {
     private final TreeMap<String, ArrayList<String>> combinazioniRotori;
     private final TreeMap<String , String> combinazioniRiflessori;
 
-
-
-
     public Enigma(String pRotori, String pRiflessori) throws IOException, FileNotFoundException {
         this.rotori = new ArrayList<>();
         this.combinazioniRotori = new TreeMap<>();
@@ -25,7 +22,7 @@ public class Enigma {
         this.rotori.add(new Rotore(this.combinazioniRotori.get("I").getFirst(), this.combinazioniRotori.get("I").getLast()));
         this.rotori.add(new Rotore(this.combinazioniRotori.get("II").getFirst(), this.combinazioniRotori.get("II").getLast()));
         this.rotori.add(new Rotore(this.combinazioniRotori.get("III").getFirst(), this.combinazioniRotori.get("III").getLast()));
-        this.riflessore = new Riflessore(this.combinazioniRiflessori.get("B"));
+        this.riflessore = new Riflessore(this.combinazioniRiflessori.get("A"));
         //System.out.println(this.combinazioniRotori);
         //System.out.println(this.combinazioniRiflessori);
 

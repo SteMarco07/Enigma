@@ -25,7 +25,9 @@ public class Rotore {
         for (char c : stringa.toCharArray()) {
             this.alphabet.add(c - 'a');
         }
-        this.letteraRotazione = (char)(letteraRotazione.toLowerCase().charAt(0) - 'a');
+
+        this.letteraRotazione = (char)(letteraRotazione.toLowerCase().charAt(0) - 'a');;
+
     }
 
     /**
@@ -79,4 +81,6 @@ public class Rotore {
     }
 
 
+
 }
+

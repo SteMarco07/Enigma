@@ -24,4 +24,6 @@ public class Riflessore {
             this.alphabet.add(c-'a');
         }
     }
+
 }
+
