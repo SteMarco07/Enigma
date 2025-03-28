@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
@@ -15,7 +16,10 @@ import java.io.IOException;
 
 public class EnigmaController {
 
-
+    @FXML
+    private ChoiceBox<String> chbRiflector, chbRotor1, chbRotor2, chbRotor3;
+    @FXML
+    private Label lblReflector, lblPosR1, lblPosR2, lblPosR3;
     @FXML
     private GridPane gridLamps;
     @FXML
@@ -27,9 +31,47 @@ public class EnigmaController {
 
     @FXML
     public void initialize() throws IOException{
+        enigma = new Enigma("file/combinazioniRotori.csv", "file/combinazioniRiflessori.csv");
         gestisciGridButtons(60);
         gestisciGridLamps(25);
-        enigma = new Enigma("file/combinazioniRotori.csv", "file/combinazioniRiflessori.csv");
+        //System.out.println(this.enigma.getCombinazioniRiflessori());
+        chbRiflector.getItems().setAll(this.enigma.getCombinazioniRiflessori());
+        chbRiflector.getSelectionModel().select(1);
+        chbRotor1.getItems().setAll(this.enigma.getCombinazioniRotori());
+        chbRotor1.getSelectionModel().select(0);
+        chbRotor2.getItems().setAll(this.enigma.getCombinazioniRotori());
+        chbRotor2.getSelectionModel().select(1);
+        chbRotor3.getItems().setAll(this.enigma.getCombinazioniRotori());
+        chbRotor3.getSelectionModel().select(2);
+        aggiornaPosizioni();
+        aggiornaRotoriListener();
+
+    }
+
+    private void aggiornaPosizioni() {
+        lblPosR1.setText(String.valueOf((char)('A' + this.enigma.getRotazoine(0))));
+        lblPosR2.setText(String.valueOf((char)('A' + this.enigma.getRotazoine(1))));
+        lblPosR3.setText(String.valueOf((char)('A' + this.enigma.getRotazoine(2))));
+    }
+
+    private void aggiornaRotore(int nRotore, String val) {
+        enigma.modificaCombinazioneRotore(nRotore, val);
+        aggiornaPosizioni();
+    }
+
+    private void aggiornaRotoriListener() {
+        chbRotor1.getSelectionModel().selectedItemProperty().addListener(
+                (obs, oldVal, newVal) -> aggiornaRotore(0, newVal));
+
+        chbRotor2.getSelectionModel().selectedItemProperty().addListener(
+                (obs, oldVal, newVal) -> aggiornaRotore(1, newVal));
+
+        chbRotor3.getSelectionModel().selectedItemProperty().addListener(
+                (obs, oldVal, newVal) -> aggiornaRotore(2, newVal));
+
+        // Listener per il riflettore
+        chbRiflector.getSelectionModel().selectedItemProperty().addListener(
+                (obs, oldVal, newVal) -> enigma.modificaCombinazioneRiflessori(newVal));
     }
 
     private void gestisciGridButtons(int dim) {
@@ -43,13 +85,8 @@ public class EnigmaController {
                 buttons[indice] = new Button("" + lettera);
                 buttons[indice].setPrefWidth(dim);
                 buttons[indice].setPrefHeight(dim/2);
-                final char letteraF = lettera;
-                buttons[indice].setOnAction(e -> {
-                    for (Circle lamp : lamps) {
-                        lamp.setFill(Color.WHITE);
-                    }
-                    lamps[indice].setFill(Color.YELLOW);
-                });
+                char finalLettera = lettera;
+                buttons[indice].setOnAction(e -> cripta(finalLettera));
                 gridButtons.add(buttons[indice], j, i);
                 lettera++;
                 if (lettera == '[') return;
@@ -95,6 +132,17 @@ public class EnigmaController {
     }
 
     @FXML
+    private void cripta(char lettera) {
+        this.enigma.ruota();
+        int criptata = enigma.cripta(lettera)-'a';
+        for (Circle lamp : lamps) {
+            lamp.setFill(Color.WHITE);
+        }
+        lamps[criptata].setFill(Color.YELLOW);
+        aggiornaPosizioni();
+    }
+
+    @FXML
     private void onKeyPressed(KeyEvent event){
         if (event.getCode().isLetterKey()){
             int pos = event.getCode().getChar().charAt(0) - 'A';
@@ -102,33 +150,44 @@ public class EnigmaController {
             buttons[pos].requestFocus();
         }
     }
+
+
     @FXML
     public void onBtnMinusR3(ActionEvent actionEvent) {
+        this.enigma.setRotazoine(2, false);
+        this.aggiornaPosizioni();
     }
 
     @FXML
 
     public void onBtnPlusR3(ActionEvent actionEvent) {
-
+        this.enigma.setRotazoine(2, true);
+        this.aggiornaPosizioni();
 
     }
 
     @FXML
     public void onBtnMinusR2(ActionEvent actionEvent) {
+        this.enigma.setRotazoine(1, false);
+        this.aggiornaPosizioni();
     }
 
     @FXML
     public void onBtnPlusR2(ActionEvent actionEvent) {
-
+        this.enigma.setRotazoine(1, true);
+        this.aggiornaPosizioni();
     }
 
     @FXML
     public void onBtnMinusR1(ActionEvent actionEvent) {
+        this.enigma.setRotazoine(0, false);
+        this.aggiornaPosizioni();
     }
 
     @FXML
     public void onBtnPlusR1(ActionEvent actionEvent) {
-
+        this.enigma.setRotazoine(0, true);
+        this.aggiornaPosizioni();
     }
 
 

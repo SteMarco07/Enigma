@@ -2,7 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -38,26 +38,22 @@
                <RowConstraints minHeight="25.0" prefHeight="25.0" vgrow="SOMETIMES" />
            </rowConstraints>
             <children>
-               <ComboBox fx:id="cmbRiflector" prefWidth="150.0" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-               <ComboBox fx:id="cmbRotor3" prefWidth="150.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-               <ComboBox fx:id="cmbRotor2" prefWidth="150.0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-               <ComboBox fx:id="cmbRotor1" prefWidth="150.0" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-               <Label text="A" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3">
+               <Label fx:id="lblPosR3" text="A" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3">
                   <font>
                      <Font size="18.0" />
                   </font>
                </Label>
-               <Label text="A" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3">
+               <Label fx:id="lblPosR2" text="A" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3">
                   <font>
                      <Font size="18.0" />
                   </font>
                </Label>
-               <Label text="A" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="3">
+               <Label fx:id="lblPosR1" text="A" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="3">
                   <font>
                      <Font size="18.0" />
                   </font>
                </Label>
-               <Label text="B" GridPane.halignment="CENTER" GridPane.rowIndex="3">
+               <Label fx:id="lblReflector" text="A" GridPane.halignment="CENTER" GridPane.rowIndex="3">
                   <font>
                      <Font size="18.0" />
                   </font>
@@ -122,6 +118,10 @@
                      <Font size="18.0" />
                   </font>
                </Label>
+               <ChoiceBox fx:id="chbRiflector" prefWidth="150.0" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+               <ChoiceBox fx:id="chbRotor3" prefWidth="150.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+               <ChoiceBox fx:id="chbRotor2" prefWidth="150.0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+               <ChoiceBox fx:id="chbRotor1" prefWidth="150.0" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
             </children>
          </GridPane>
          <GridPane fx:id="gridLamps" alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">

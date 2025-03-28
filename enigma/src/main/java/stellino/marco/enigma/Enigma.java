@@ -1,5 +1,7 @@
 package stellino.marco.enigma;
 
+import javafx.collections.ObservableList;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -22,7 +24,7 @@ public class Enigma {
         this.rotori.add(new Rotore(this.combinazioniRotori.get("I").getFirst(), this.combinazioniRotori.get("I").getLast()));
         this.rotori.add(new Rotore(this.combinazioniRotori.get("II").getFirst(), this.combinazioniRotori.get("II").getLast()));
         this.rotori.add(new Rotore(this.combinazioniRotori.get("III").getFirst(), this.combinazioniRotori.get("III").getLast()));
-        this.riflessore = new Riflessore(this.combinazioniRiflessori.get("A"));
+        this.riflessore = new Riflessore(this.combinazioniRiflessori.get("B"));
         //System.out.println(this.combinazioniRotori);
         //System.out.println(this.combinazioniRiflessori);
 
@@ -55,14 +57,14 @@ public class Enigma {
         br.close();
     }
 
-    public void modificaCombinazioneRotore (int nRotore, String combinazione) {
-        this.rotori.get(nRotore).modificaCombinazione(this.combinazioniRotori.get(combinazione).getFirst(), combinazioniRotori.get(combinazione).getLast());
-        //System.out.println(this.combinazioniRotori);
+    public void modificaCombinazioneRotore (int nRotore, String nomeRotore) {
+        this.rotori.get(nRotore).modificaCombinazione(this.combinazioniRotori.get(nomeRotore).getFirst(), combinazioniRotori.get(nomeRotore).getLast());
+        //System.out.println(this.combinazioniRotori.get(nomeRotore).getFirst() + combinazioniRotori.get(nomeRotore).getLast());
     }
 
-    public void modificaCombinazioneRiflessori (String combinazione) {
-        this.riflessore.modificaCombinazione(this.combinazioniRiflessori.get(combinazione));
-        //System.out.println(this.combinazioniRiflessori);
+    public void modificaCombinazioneRiflessori (String nomeRiflessore) {
+        this.riflessore.modificaCombinazione(this.combinazioniRiflessori.get(nomeRiflessore));
+        //System.out.println(this.combinazioniRiflessori.get(nomeRiflessore));
 
     }
 
@@ -78,21 +80,21 @@ public class Enigma {
     }
 
 
-    private String criptaAvanti(String lettera) {
+    private char criptaAvanti(char lettera) {
         for (var i : this.rotori) {
             lettera = i.criptaAvanti(lettera);
         }
         return lettera;
     }
 
-    private String criptaIndietro(String lettera) {
+    private char criptaIndietro(char lettera) {
         for (int i = this.rotori.size() - 1; i >= 0; i--) {
             lettera = this.rotori.get(i).criptaIndietro(lettera);
         }
         return lettera;
     }
 
-    public String cripta(String lettera) {
+    public char cripta(char lettera) {
 
         return this.criptaIndietro(this.riflessore.cripta(this.criptaAvanti(lettera)));
     }
@@ -103,6 +105,18 @@ public class Enigma {
 
     public Set<String> getCombinazioniRotori() {
         return this.combinazioniRotori.keySet();
+    }
+
+    public int getRotazoine(int n_rotore) {
+        return this.rotori.get(n_rotore).getRotazione();
+    }
+
+    public void setRotazoine(int n_rotore, int rotazine) {
+        this.rotori.get(n_rotore).setRotazione(rotazine);
+    }
+
+    public void setRotazoine(int n_rotore, boolean aumenta) {
+        this.rotori.get(n_rotore).setRotazione(aumenta);
     }
 
 
