@@ -1,9 +1,12 @@
 package stellino.marco.enigma;
 
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
@@ -15,6 +18,8 @@ import java.io.IOException;
 
 public class EnigmaController {
 
+    @FXML
+    private ChoiceBox<String> chbRiflector, chbRotor1, chbRotor2, chbRotor3;
 
     @FXML
     private GridPane gridLamps;
@@ -27,9 +32,19 @@ public class EnigmaController {
 
     @FXML
     public void initialize() throws IOException{
+        enigma = new Enigma("file/combinazioniRotori.csv", "file/combinazioniRiflessori.csv");
         gestisciGridButtons(60);
         gestisciGridLamps(25);
-        enigma = new Enigma("file/combinazioniRotori.csv", "file/combinazioniRiflessori.csv");
+        //System.out.println(this.enigma.getCombinazioniRiflessori());
+        chbRiflector.getItems().setAll(this.enigma.getCombinazioniRiflessori());
+        chbRiflector.getSelectionModel().select(1);
+        chbRotor1.getItems().setAll(this.enigma.getCombinazioniRotori());
+        chbRotor1.getSelectionModel().select(0);
+        chbRotor2.getItems().setAll(this.enigma.getCombinazioniRotori());
+        chbRotor2.getSelectionModel().select(1);
+        chbRotor3.getItems().setAll(this.enigma.getCombinazioniRotori());
+        chbRotor3.getSelectionModel().select(2);
+
     }
 
     private void gestisciGridButtons(int dim) {
@@ -43,13 +58,8 @@ public class EnigmaController {
                 buttons[indice] = new Button("" + lettera);
                 buttons[indice].setPrefWidth(dim);
                 buttons[indice].setPrefHeight(dim/2);
-                final char letteraF = lettera;
-                buttons[indice].setOnAction(e -> {
-                    for (Circle lamp : lamps) {
-                        lamp.setFill(Color.WHITE);
-                    }
-                    lamps[indice].setFill(Color.YELLOW);
-                });
+                char finalLettera = lettera;
+                buttons[indice].setOnAction(e -> cripta(finalLettera));
                 gridButtons.add(buttons[indice], j, i);
                 lettera++;
                 if (lettera == '[') return;
@@ -92,6 +102,16 @@ public class EnigmaController {
                 if (lettera == '[') return;
             }
         }
+    }
+
+    @FXML
+    private void cripta(char lettera) {
+        this.enigma.ruota();
+        int criptata = enigma.cripta(lettera)-'a';
+        for (Circle lamp : lamps) {
+            lamp.setFill(Color.WHITE);
+        }
+        lamps[criptata].setFill(Color.YELLOW);
     }
 
     @FXML

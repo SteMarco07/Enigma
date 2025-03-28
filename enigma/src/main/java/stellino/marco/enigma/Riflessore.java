@@ -12,11 +12,11 @@ public class Riflessore {
         }
     }
 
-    public String cripta(String lettera) {
-        lettera = lettera.toLowerCase();
-        int uscita = alphabet.get(lettera.charAt(0) - 'a');
+    public char cripta(char lettera) {
+        lettera = Character.toLowerCase(lettera);
+        int uscita = alphabet.get(lettera - 'a');
         //System.out.println((char)('a' + uscita));
-        return String.valueOf((char)('a' + uscita));
+        return (char)('a' + uscita);
     }
 
     public void modificaCombinazione(String combinazione) {
@@ -26,4 +26,3 @@ public class Riflessore {
     }
 
 }
-

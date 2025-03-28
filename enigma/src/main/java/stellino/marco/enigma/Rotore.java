@@ -35,12 +35,12 @@ public class Rotore {
      * @param lettera Lettera in input (String)
      * @return Lettera output (String)
      */
-    public String criptaAvanti(String lettera){
-        lettera = lettera.toLowerCase();
-        int i = (lettera.charAt(0) - 'a' + this.rotazione)%26;
+    public char criptaAvanti(char lettera){
+        lettera = Character.toLowerCase(lettera);
+        int i = (lettera - 'a' + this.rotazione)%26;
         int uscita = ( alphabet.get(i) - this.rotazione + 26)%26;
         //System.out.println((char)('a' + uscita));
-        return String.valueOf((char)('a' + uscita));
+        return (char)('a' + uscita);
     }
 
     /**
@@ -48,12 +48,12 @@ public class Rotore {
      * @param lettera Lettera in input (String)
      * @return Lettera output (String)
      */
-    public String criptaIndietro(String lettera){
-        lettera = lettera.toLowerCase();
-        int i = (lettera.charAt(0) - 'a' + this.rotazione)%26;
+    public char criptaIndietro(char lettera){
+        lettera = Character.toLowerCase(lettera);
+        int i = (lettera - 'a' + this.rotazione)%26;
         int uscita = (alphabet.indexOf(i)- this.rotazione + 26)%26;
         //System.out.println((char)('a' + uscita));
-        return String.valueOf((char)('a' + uscita));
+        return (char)('a' + uscita);
     }
 
     /**
@@ -83,4 +83,3 @@ public class Rotore {
 
 
 }
-
