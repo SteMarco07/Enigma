@@ -1,5 +1,6 @@
 package stellino.marco.enigma;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -8,7 +9,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 
 public class EnigmaController {
@@ -41,9 +41,8 @@ public class EnigmaController {
                 buttons[indice].setPrefHeight(dim/2);
                 final char letteraF = lettera;
                 buttons[indice].setOnAction(e -> {
-                    System.out.println("Hai premuto la lettera " + letteraF);
                     for (Circle lamp : lamps) {
-                        lamp.setFill(Paint.valueOf("#ffffff"));
+                        lamp.setFill(Color.WHITE);
                     }
                     lamps[indice].setFill(Color.YELLOW);
                 });
@@ -67,8 +66,8 @@ public class EnigmaController {
             for (int j = 0; j < 9; j++) {
                 // Crea il cerchio
                 Circle circle = new Circle(dim);
-                circle.setFill(Paint.valueOf("#ffffff"));
-                circle.setStroke(Paint.valueOf("#000000"));
+                circle.setFill(Color.WHITE);
+                circle.setStroke(Color.BLACK);
 
                 // Crea la label con la lettera
                 Label label = new Label(String.valueOf(lettera));
@@ -92,11 +91,39 @@ public class EnigmaController {
     }
 
     @FXML
-    public void onKeyPressed(KeyEvent event){
+    private void onKeyPressed(KeyEvent event){
         if (event.getCode().isLetterKey()){
             int pos = event.getCode().getChar().charAt(0) - 'A';
             buttons[pos].fire();
             buttons[pos].requestFocus();
         }
     }
+    @FXML
+    public void onBtnMinusR3(ActionEvent actionEvent) {
+    }
+
+    @FXML
+    public void onBtnPlusR3(ActionEvent actionEvent) {
+
+    }
+
+    @FXML
+    public void onBtnMinusR2(ActionEvent actionEvent) {
+    }
+
+    @FXML
+    public void onBtnPlusR2(ActionEvent actionEvent) {
+
+    }
+
+    @FXML
+    public void onBtnMinusR1(ActionEvent actionEvent) {
+    }
+
+    @FXML
+    public void onBtnPlusR1(ActionEvent actionEvent) {
+
+    }
+
+
 }

@@ -3,9 +3,9 @@ import java.util.ArrayList;
 
 
 public class Rotore {
-    private final ArrayList<Integer> alphabet;
+    private ArrayList<Integer> alphabet;
     private int rotazione;
-    private String letteraRotazione;
+    private char letteraRotazione;
 
     public Rotore(String stringa, String letteraRotazione) {
         stringa = stringa.toLowerCase();
@@ -13,16 +13,19 @@ public class Rotore {
         for (char c : stringa.toCharArray()) {
             this.alphabet.add(c - 'a');
         }
-        this.letteraRotazione = letteraRotazione.toLowerCase();
+        this.letteraRotazione = (char)(letteraRotazione.toLowerCase().charAt(0) - 'a');
         this.rotazione = 0;
+
     }
+
 
     public void modificaCombinazione(String stringa, String letteraRotazione) {
         stringa = stringa.toLowerCase();
+        this.alphabet.clear();
         for (char c : stringa.toCharArray()) {
             this.alphabet.add(c - 'a');
         }
-        this.letteraRotazione = letteraRotazione.toLowerCase();
+        this.letteraRotazione = (char)(letteraRotazione.toLowerCase().charAt(0) - 'a');
     }
 
     /**
@@ -30,10 +33,11 @@ public class Rotore {
      * @param lettera Lettera in input (String)
      * @return Lettera output (String)
      */
-    public String get_uscita_dritto( String lettera){
+    public String criptaAvanti(String lettera){
         lettera = lettera.toLowerCase();
         int i = (lettera.charAt(0) - 'a' + this.rotazione)%26;
         int uscita = ( alphabet.get(i) - this.rotazione + 26)%26;
+        //System.out.println((char)('a' + uscita));
         return String.valueOf((char)('a' + uscita));
     }
 
@@ -42,10 +46,11 @@ public class Rotore {
      * @param lettera Lettera in input (String)
      * @return Lettera output (String)
      */
-    public String get_uscita_inverso(String lettera){
+    public String criptaIndietro(String lettera){
         lettera = lettera.toLowerCase();
         int i = (lettera.charAt(0) - 'a' + this.rotazione)%26;
         int uscita = (alphabet.indexOf(i)- this.rotazione + 26)%26;
+        //System.out.println((char)('a' + uscita));
         return String.valueOf((char)('a' + uscita));
     }
 
@@ -58,14 +63,14 @@ public class Rotore {
     }
 
     public boolean isCambioLettera(){
-        return this.rotazione == this.letteraRotazione.charAt(0) - 'a';
+        return this.rotazione == this.letteraRotazione + 1;
     }
 
-    public int get_rotazione(){
+    public int getRotazione(){
         return this.rotazione;
     }
 
-    public void set_rotazione(int v){
+    public void setRotazione(int v){
         if ( v >= 0 && v < 26){
             this.rotazione = v;
         } else {

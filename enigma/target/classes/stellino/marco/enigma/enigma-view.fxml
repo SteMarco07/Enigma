@@ -38,10 +38,10 @@
                <RowConstraints minHeight="25.0" prefHeight="25.0" vgrow="SOMETIMES" />
            </rowConstraints>
             <children>
-               <ComboBox prefWidth="150.0" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-               <ComboBox prefWidth="150.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-               <ComboBox prefWidth="150.0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-               <ComboBox prefWidth="150.0" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+               <ComboBox fx:id="cmbRiflector" prefWidth="150.0" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+               <ComboBox fx:id="cmbRotor3" prefWidth="150.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+               <ComboBox fx:id="cmbRotor2" prefWidth="150.0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+               <ComboBox fx:id="cmbRotor1" prefWidth="150.0" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
                <Label text="A" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3">
                   <font>
                      <Font size="18.0" />
@@ -57,7 +57,7 @@
                      <Font size="18.0" />
                   </font>
                </Label>
-               <Label text="A" GridPane.halignment="CENTER" GridPane.rowIndex="3">
+               <Label text="B" GridPane.halignment="CENTER" GridPane.rowIndex="3">
                   <font>
                      <Font size="18.0" />
                   </font>
@@ -67,17 +67,17 @@
                      <Font size="18.0" />
                   </font>
                </Button>
-               <Button maxHeight="30.0" maxWidth="40.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="40.0" text="-" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+               <Button maxHeight="30.0" maxWidth="40.0" mnemonicParsing="false" onAction="#onBtnMinusR3" prefHeight="30.0" prefWidth="40.0" text="-" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2">
                   <font>
                      <Font size="18.0" />
                   </font>
                </Button>
-               <Button maxHeight="30.0" maxWidth="40.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="40.0" text="-" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+               <Button maxHeight="30.0" maxWidth="40.0" mnemonicParsing="false" onAction="#onBtnMinusR2" prefHeight="30.0" prefWidth="40.0" text="-" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2">
                   <font>
                      <Font size="18.0" />
                   </font>
                </Button>
-               <Button maxHeight="30.0" maxWidth="40.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="40.0" text="-" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+               <Button maxHeight="30.0" maxWidth="40.0" mnemonicParsing="false" onAction="#onBtnMinusR1" prefHeight="30.0" prefWidth="40.0" text="-" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2">
                   <font>
                      <Font size="18.0" />
                   </font>
@@ -87,17 +87,17 @@
                      <Font size="18.0" />
                   </font>
                </Button>
-               <Button maxHeight="30.0" maxWidth="40.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="40.0" text="+" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4">
+               <Button maxHeight="30.0" maxWidth="40.0" mnemonicParsing="false" onAction="#onBtnPlusR3" prefHeight="30.0" prefWidth="40.0" text="+" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4">
                   <font>
                      <Font size="18.0" />
                   </font>
                </Button>
-               <Button maxHeight="30.0" maxWidth="40.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="40.0" text="+" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="4">
+               <Button maxHeight="30.0" maxWidth="40.0" mnemonicParsing="false" onAction="#onBtnPlusR2" prefHeight="30.0" prefWidth="40.0" text="+" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="4">
                   <font>
                      <Font size="18.0" />
                   </font>
                </Button>
-               <Button maxHeight="30.0" maxWidth="40.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="40.0" text="+" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="4">
+               <Button maxHeight="30.0" maxWidth="40.0" mnemonicParsing="false" onAction="#onBtnPlusR1" prefHeight="30.0" prefWidth="40.0" text="+" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="4">
                   <font>
                      <Font size="18.0" />
                   </font>
