@@ -10,10 +10,13 @@ import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,6 +29,8 @@ public class EnigmaController {
             'P', 'Y', 'X', 'C', 'V', 'B', 'N', 'M', 'L'
     };
 
+    @FXML
+    private VBox vBoxCombo1, vBoxCombo2;
     @FXML
     private ChoiceBox<String> chbRiflector, chbRotor1, chbRotor2, chbRotor3;
     @FXML
@@ -118,9 +123,30 @@ public class EnigmaController {
             lettera1 = lettera;
         } else if (lettera2 == '\0') {
             lettera2 = lettera;
-            enigma.aggiungiCoppia(lettera1, lettera2);
+            if (enigma.aggiungiCoppia(lettera1, lettera2))
+                aggiornaCombinazioni();
             lettera1 = '\0';
             lettera2 = '\0';
+        }
+
+    }
+
+    public void onBtnClearPB(ActionEvent actionEvent) {
+        this.vBoxCombo1.getChildren().clear();
+        this.vBoxCombo2.getChildren().clear();
+        for (var i : enigma.getCoppiePlugBoard()){
+            enigma.rimuoviCoppia(i.charAt(0));
+        }
+    }
+
+    private void aggiornaCombinazioni() {
+        ArrayList <String> combinazioni = this.enigma.getCoppiePlugBoard();
+        Label l = new Label(combinazioni.getLast());
+        l.setFont(new Font(18));
+        if (combinazioni.size() <= 3 ){
+            vBoxCombo1.getChildren().add(l);
+        } else {
+            vBoxCombo2.getChildren().add(l);
         }
     }
 
@@ -307,4 +333,6 @@ public class EnigmaController {
         this.enigma.setRotazoine(2,0);
         aggiornaPosizioni();
     }
+
+
 }

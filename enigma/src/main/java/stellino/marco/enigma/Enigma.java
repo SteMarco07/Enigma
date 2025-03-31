@@ -122,8 +122,8 @@ public class Enigma {
         this.rotori.get(n_rotore).setRotazione(aumenta);
     }
 
-    public void aggiungiCoppia(char lettera1, char lettera2) {
-        this.plugBoard.aggiungiCoppia(lettera1, lettera2);
+    public boolean aggiungiCoppia(char lettera1, char lettera2) {
+        return this.plugBoard.aggiungiCoppia(lettera1, lettera2);
     }
 
     public void rimuoviCoppia(char lettera) {
@@ -132,5 +132,9 @@ public class Enigma {
 
     public void modificaCoppia(char vecchia, char nuova1, char nuova2) {
         this.plugBoard.modificaCoppia(vecchia, nuova1, nuova2);
+    }
+
+    public ArrayList<String> getCoppiePlugBoard() {
+        return this.plugBoard.getCombinazioni();
     }
 }

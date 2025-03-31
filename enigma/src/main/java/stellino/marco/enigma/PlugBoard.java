@@ -6,29 +6,46 @@ import java.util.HashMap;
 
 public class PlugBoard {
     private HashMap<Character, Character> coppie;
+    private ArrayList<String> combinazioni;
 
     public PlugBoard() {
         coppie = new HashMap<>();
+        combinazioni = new ArrayList<>();
     }
 
-    public void aggiungiCoppia(char lettera1, char lettera2) {
+    //Non funziona
+    public ArrayList<String> getCombinazioni() {
+        //System.out.println(combinazioni);
+        return this.combinazioni;
+    }
+
+    public boolean aggiungiCoppia(char lettera1, char lettera2) {
+        boolean eseguibile = true;
         char l1 = Character.toLowerCase(lettera1);
         char l2 = Character.toLowerCase(lettera2);
 
         if (l1 < 'a' || l1 > 'z' || l2 < 'a' || l2 > 'z') {
-            throw new IllegalArgumentException("Le lettere devono essere tra 'a' e 'z'");
+            eseguibile = false;
         }
 
         if (l1 == l2) {
-            throw new IllegalArgumentException("Una lettera non può essere collegata a se stessa");
+            eseguibile = false;
         }
 
         if (coppie.containsKey(l1) || coppie.containsKey(l2)) {
-            throw new IllegalArgumentException("Una delle lettere è già stata aggiunta");
+            eseguibile = false;
         }
 
-        coppie.put(l1, l2);
-        coppie.put(l2, l1);
+        if (combinazioni.size() >= 6) {
+            eseguibile = false;
+        }
+        if (eseguibile) {
+            this.combinazioni.add("" + lettera1 + lettera2);
+            //System.out.println("Creata combinazione: " +  l1 + l2);
+            coppie.put(l1, l2);
+            coppie.put(l2, l1);
+        }
+        return eseguibile;
     }
 
     public void generaMappatureCasuali() {
@@ -60,6 +77,10 @@ public class PlugBoard {
         char associato = coppie.get(l);
         coppie.remove(l);
         coppie.remove(associato);
+        //System.out.println(""+l+associato);
+        if (combinazioni.remove(""+l+associato)) {
+            System.out.println("rimosso");
+        }
     }
 
     public void modificaCoppia(char vecchiaLettera, char nuovaLettera1, char nuovaLettera2) {
