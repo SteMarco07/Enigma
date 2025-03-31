@@ -6,6 +6,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
@@ -31,10 +32,16 @@ public class EnigmaController {
     private GridPane gridLamps;
     @FXML
     private GridPane gridButtons;
+    @FXML
+    private TextArea txaIn, txaOut;
+
     private Enigma enigma;
 
     private Button[] buttons;
     private Circle[] lamps;
+
+    private boolean isProcessingText = false;
+    private int lastTextLength = 0;
 
     @FXML
     public void initialize() throws IOException {
@@ -51,6 +58,7 @@ public class EnigmaController {
         chbRotor3.getSelectionModel().select(2);
         aggiornaPosizioni();
         aggiornaRotoriListener();
+        configuraTextArea();
     }
 
     private void gestisciGridButtons(int dim) {
@@ -99,15 +107,60 @@ public class EnigmaController {
         }
     }
 
-    @FXML
-    private void cripta(char lettera) {
-        this.enigma.ruota();
-        char criptataChar = enigma.cripta(lettera);
-        criptataChar = Character.toUpperCase(criptataChar);
+    private void configuraTextArea() {
+        // Filtra l'input solo per lettere e converte in maiuscolo
+        txaIn.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (!isProcessingText) {
+                isProcessingText = true;
 
+                // Gestisci solo nuovi caratteri aggiunti
+                if (newVal.length() > lastTextLength) {
+                    String addedText = newVal.substring(lastTextLength).toUpperCase();
+                    StringBuilder validChars = new StringBuilder();
+
+                    for (char c : addedText.toCharArray()) {
+                        if (Character.isLetter(c)) {
+                            validChars.append(c);
+                            processaCarattere(c);
+                        }
+                    }
+
+                    // Aggiorna il testo mantenendo solo i caratteri validi
+                    String currentText = txaIn.getText().toUpperCase();
+                    String cleanedText = currentText.replaceAll("[^A-Z]", "");
+                    txaIn.setText(cleanedText);
+                    txaIn.positionCaret(cleanedText.length());
+                }
+
+                lastTextLength = txaIn.getText().length();
+                isProcessingText = false;
+            }
+        });
+    }
+
+    private void processaCarattere(char c) {
+        // Cripta il carattere e aggiungi all'output
+        c  = Character.toLowerCase(c);
+        if (c >= 'a' && c <= 'z') {
+            char encrypted = criptaChar(c);
+            if (txaOut.getText().length() % 5 == 0) {
+                txaOut.appendText(" ");
+            }
+            
+            txaOut.appendText(String.valueOf(encrypted));
+        }
+
+    }
+
+    private char criptaChar(char lettera) {
+        this.enigma.ruota();
+        lettera = enigma.cripta(lettera);
+        lettera = Character.toUpperCase(lettera);
+
+        // Aggiorna lampade
         int criptataIndex = -1;
         for (int i = 0; i < QWERTZ_ORDER.length; i++) {
-            if (QWERTZ_ORDER[i] == criptataChar) {
+            if (QWERTZ_ORDER[i] == lettera) {
                 criptataIndex = i;
                 break;
             }
@@ -115,25 +168,27 @@ public class EnigmaController {
 
         for (Circle lamp : lamps) lamp.setFill(Color.WHITE);
         if (criptataIndex != -1) lamps[criptataIndex].setFill(Color.YELLOW);
-
         aggiornaPosizioni();
+        return lettera;
+    }
+
+    // Modifica i metodi esistenti per usare processaCarattere
+    @FXML
+    private void cripta(char lettera) {
+        txaIn.appendText(String.valueOf(lettera));
     }
 
     @FXML
     private void onKeyPressed(KeyEvent event) {
         if (event.getCode().isLetterKey()) {
             char inputChar = Character.toUpperCase(event.getCode().getChar().charAt(0));
-            int pos = -1;
             for (int i = 0; i < QWERTZ_ORDER.length; i++) {
                 if (QWERTZ_ORDER[i] == inputChar) {
-                    pos = i;
+                    txaIn.appendText(String.valueOf(QWERTZ_ORDER[i]));
                     break;
                 }
             }
-            if (pos != -1) {
-                buttons[pos].fire();
-                buttons[pos].requestFocus();
-            }
+            event.consume();
         }
     }
 
@@ -194,5 +249,17 @@ public class EnigmaController {
     public void onBtnPlusR1(ActionEvent actionEvent) {
         this.enigma.setRotazoine(0, true);
         this.aggiornaPosizioni();
+    }
+
+    public void onBtnClearTxa(ActionEvent actionEvent) {
+        this.txaIn.clear();
+        this.txaOut.clear();
+    }
+
+    public void onBtnResetPos(ActionEvent actionEvent) {
+        this.enigma.setRotazoine(0,0);
+        this.enigma.setRotazoine(1,0);
+        this.enigma.setRotazoine(2,0);
+        aggiornaPosizioni();
     }
 }
