@@ -1,0 +1,97 @@
+package stellino.marco.enigma;
+import java.util.ArrayList;
+
+
+public class Rotore {
+    private ArrayList<Integer> alphabet;
+    private int rotazione;
+    private char letteraRotazione;
+
+    public Rotore(String stringa, String letteraRotazione) {
+        stringa = stringa.toLowerCase();
+        this.alphabet = new ArrayList<>();
+        for (char c : stringa.toCharArray()) {
+            this.alphabet.add(c - 'a');
+        }
+        this.letteraRotazione = (char)(letteraRotazione.toLowerCase().charAt(0) - 'a');
+        this.rotazione = 0;
+
+    }
+
+
+    public void modificaCombinazione(String stringa, String letteraRotazione) {
+        stringa = stringa.toLowerCase();
+        this.alphabet.clear();
+        for (char c : stringa.toCharArray()) {
+            this.alphabet.add(c - 'a');
+        }
+        this.letteraRotazione = (char)(letteraRotazione.toLowerCase().charAt(0) - 'a');;
+        this.rotazione = 0;
+
+    }
+
+    /**
+     * Calcola l'uscita dato in input in una fase precedente al riflessore
+     * @param lettera Lettera in input (String)
+     * @return Lettera output (String)
+     */
+    public char criptaAvanti(char lettera){
+        lettera = Character.toLowerCase(lettera);
+        int i = (lettera - 'a' + this.rotazione)%26;
+        int uscita = ( alphabet.get(i) - this.rotazione + 26)%26;
+        //System.out.println((char)('a' + uscita));
+        return (char)('a' + uscita);
+    }
+
+    /**
+     * Calcola l'uscita dato in input in una fase successiva al riflessore
+     * @param lettera Lettera in input (String)
+     * @return Lettera output (String)
+     */
+    public char criptaIndietro(char lettera){
+        lettera = Character.toLowerCase(lettera);
+        int i = (lettera - 'a' + this.rotazione)%26;
+        int uscita = (alphabet.indexOf(i)- this.rotazione + 26)%26;
+        //System.out.println((char)('a' + uscita));
+        return (char)('a' + uscita);
+    }
+
+    /**
+     * Funzione che si occupa dell'effettiva rotazione del dizionario valori
+     */
+    public void ruota() {
+        this.rotazione++;
+        this.rotazione %= 26;
+    }
+
+    public boolean isCambioLettera(){
+        return this.rotazione == this.letteraRotazione + 1;
+    }
+
+    public int getRotazione(){
+        return this.rotazione;
+    }
+
+    public void setRotazione(int r){
+        if ( r >= 0 && r < 26){
+            this.rotazione = r;
+        } else {
+            this.rotazione = 0;
+        }
+    }
+
+    public void setRotazione(boolean aumenta){
+        if (aumenta){
+            this.rotazione++;
+            this.rotazione %= 26;
+        } else {
+            this.rotazione--;
+            if (this.rotazione == -1){
+                this.rotazione = 25;
+            }
+        }
+    }
+
+
+
+}
