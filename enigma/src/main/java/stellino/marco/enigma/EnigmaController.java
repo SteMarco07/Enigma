@@ -6,6 +6,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
@@ -16,6 +17,13 @@ import java.io.IOException;
 
 public class EnigmaController {
 
+    // Aggiungi l'array per l'ordine QWERTZ
+    private static final char[] QWERTZ_ORDER = {
+            'Q', 'W', 'E', 'R', 'T', 'Z', 'U', 'I', 'O',
+            'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K',
+            'P', 'Y', 'X', 'C', 'V', 'B', 'N', 'M', 'L'
+    };
+
     @FXML
     private ChoiceBox<String> chbRiflector, chbRotor1, chbRotor2, chbRotor3;
     @FXML
@@ -24,17 +32,22 @@ public class EnigmaController {
     private GridPane gridLamps;
     @FXML
     private GridPane gridButtons;
+    @FXML
+    private TextArea txaIn, txaOut;
+
     private Enigma enigma;
 
     private Button[] buttons;
     private Circle[] lamps;
 
+    private boolean isProcessingText = false;
+    private int lastTextLength = 0;
+
     @FXML
-    public void initialize() throws IOException{
+    public void initialize() throws IOException {
         enigma = new Enigma("file/combinazioniRotori.csv", "file/combinazioniRiflessori.csv");
         gestisciGridButtons(60);
         gestisciGridLamps(25);
-        //System.out.println(this.enigma.getCombinazioniRiflessori());
         chbRiflector.getItems().setAll(this.enigma.getCombinazioniRiflessori());
         chbRiflector.getSelectionModel().select(1);
         chbRotor1.getItems().setAll(this.enigma.getCombinazioniRotori());
@@ -45,9 +58,141 @@ public class EnigmaController {
         chbRotor3.getSelectionModel().select(2);
         aggiornaPosizioni();
         aggiornaRotoriListener();
+        configuraTextArea();
+    }
+
+    private void gestisciGridButtons(int dim) {
+        buttons = new Button[26];
+        gridButtons.setVgap(10);
+        gridButtons.setHgap(10);
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 9; j++) {
+                int indice = i * 9 + j;
+                if (indice >= QWERTZ_ORDER.length) return;
+
+                char lettera = QWERTZ_ORDER[indice];
+                buttons[indice] = new Button(String.valueOf(lettera));
+                buttons[indice].setPrefWidth(dim);
+                buttons[indice].setPrefHeight(dim/2);
+                char finalLettera = lettera;
+                buttons[indice].setOnAction(e -> cripta(finalLettera));
+                gridButtons.add(buttons[indice], j, i);
+            }
+        }
+    }
+
+    private void gestisciGridLamps(int dim) {
+        lamps = new Circle[26];
+        gridLamps.setVgap(10);
+        gridLamps.setHgap(20);
+        gridLamps.setAlignment(Pos.CENTER);
+
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 9; j++) {
+                int indice = i * 9 + j;
+                if (indice >= QWERTZ_ORDER.length) return;
+
+                Circle circle = new Circle(dim);
+                circle.setFill(Color.WHITE);
+                circle.setStroke(Color.BLACK);
+
+                Label label = new Label(String.valueOf(QWERTZ_ORDER[indice]));
+                StackPane stackPane = new StackPane();
+                stackPane.setAlignment(Pos.CENTER);
+                stackPane.getChildren().addAll(circle, label);
+
+                gridLamps.add(stackPane, j, i);
+                lamps[indice] = circle;
+            }
+        }
+    }
+
+    private void configuraTextArea() {
+        // Filtra l'input solo per lettere e converte in maiuscolo
+        txaIn.textProperty().addListener((obs, oldVal, newVal) -> {
+            if (!isProcessingText) {
+                isProcessingText = true;
+
+                // Gestisci solo nuovi caratteri aggiunti
+                if (newVal.length() > lastTextLength) {
+                    String addedText = newVal.substring(lastTextLength).toUpperCase();
+                    StringBuilder validChars = new StringBuilder();
+
+                    for (char c : addedText.toCharArray()) {
+                        if (Character.isLetter(c)) {
+                            validChars.append(c);
+                            processaCarattere(c);
+                        }
+                    }
+
+                    // Aggiorna il testo mantenendo solo i caratteri validi
+                    String currentText = txaIn.getText().toUpperCase();
+                    String cleanedText = currentText.replaceAll("[^A-Z]", "");
+                    txaIn.setText(cleanedText);
+                    txaIn.positionCaret(cleanedText.length());
+                }
+
+                lastTextLength = txaIn.getText().length();
+                isProcessingText = false;
+            }
+        });
+    }
+
+    private void processaCarattere(char c) {
+        // Cripta il carattere e aggiungi all'output
+        c  = Character.toLowerCase(c);
+        if (c >= 'a' && c <= 'z') {
+            char encrypted = criptaChar(c);
+            if (txaOut.getText().length() % 5 == 0) {
+                txaOut.appendText(" ");
+            }
+            
+            txaOut.appendText(String.valueOf(encrypted));
+        }
 
     }
 
+    private char criptaChar(char lettera) {
+        this.enigma.ruota();
+        lettera = enigma.cripta(lettera);
+        lettera = Character.toUpperCase(lettera);
+
+        // Aggiorna lampade
+        int criptataIndex = -1;
+        for (int i = 0; i < QWERTZ_ORDER.length; i++) {
+            if (QWERTZ_ORDER[i] == lettera) {
+                criptataIndex = i;
+                break;
+            }
+        }
+
+        for (Circle lamp : lamps) lamp.setFill(Color.WHITE);
+        if (criptataIndex != -1) lamps[criptataIndex].setFill(Color.YELLOW);
+        aggiornaPosizioni();
+        return lettera;
+    }
+
+    // Modifica i metodi esistenti per usare processaCarattere
+    @FXML
+    private void cripta(char lettera) {
+        txaIn.appendText(String.valueOf(lettera));
+    }
+
+    @FXML
+    private void onKeyPressed(KeyEvent event) {
+        if (event.getCode().isLetterKey()) {
+            char inputChar = Character.toUpperCase(event.getCode().getChar().charAt(0));
+            for (int i = 0; i < QWERTZ_ORDER.length; i++) {
+                if (QWERTZ_ORDER[i] == inputChar) {
+                    txaIn.appendText(String.valueOf(QWERTZ_ORDER[i]));
+                    break;
+                }
+            }
+            event.consume();
+        }
+    }
+
+    // Resto del codice invariato...
     private void aggiornaPosizioni() {
         lblPosR1.setText(String.valueOf((char)('A' + this.enigma.getRotazoine(0))));
         lblPosR2.setText(String.valueOf((char)('A' + this.enigma.getRotazoine(1))));
@@ -62,95 +207,13 @@ public class EnigmaController {
     private void aggiornaRotoriListener() {
         chbRotor1.getSelectionModel().selectedItemProperty().addListener(
                 (obs, oldVal, newVal) -> aggiornaRotore(0, newVal));
-
         chbRotor2.getSelectionModel().selectedItemProperty().addListener(
                 (obs, oldVal, newVal) -> aggiornaRotore(1, newVal));
-
         chbRotor3.getSelectionModel().selectedItemProperty().addListener(
                 (obs, oldVal, newVal) -> aggiornaRotore(2, newVal));
-
-        // Listener per il riflettore
         chbRiflector.getSelectionModel().selectedItemProperty().addListener(
                 (obs, oldVal, newVal) -> enigma.modificaCombinazioneRiflessori(newVal));
     }
-
-    private void gestisciGridButtons(int dim) {
-        buttons = new Button[26];
-        char lettera = 'A';
-        gridButtons.setVgap(10);
-        gridButtons.setHgap(10);
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 9; j++) {
-                int indice = i * 9 + j;
-                buttons[indice] = new Button("" + lettera);
-                buttons[indice].setPrefWidth(dim);
-                buttons[indice].setPrefHeight(dim/2);
-                char finalLettera = lettera;
-                buttons[indice].setOnAction(e -> cripta(finalLettera));
-                gridButtons.add(buttons[indice], j, i);
-                lettera++;
-                if (lettera == '[') return;
-            }
-        }
-    }
-
-    private void gestisciGridLamps(int dim) {
-        lamps = new Circle[26];
-        char lettera = 'A';
-        gridLamps.setVgap(10);
-        gridLamps.setHgap(20);
-
-        // Imposta l'allineamento al centro per tutte le celle della griglia
-        gridLamps.setAlignment(Pos.CENTER);
-
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 9; j++) {
-                // Crea il cerchio
-                Circle circle = new Circle(dim);
-                circle.setFill(Color.WHITE);
-                circle.setStroke(Color.BLACK);
-
-                // Crea la label con la lettera
-                Label label = new Label(String.valueOf(lettera));
-
-
-                // Crea un container StackPane per centrare gli elementi
-                StackPane stackPane = new StackPane();
-                stackPane.setAlignment(Pos.CENTER);  // Centra sia cerchio che label
-                stackPane.getChildren().addAll(circle, label);
-
-                // Aggiungi alla griglia
-                gridLamps.add(stackPane, j, i);
-
-                // Memorizza il cerchio nell'array
-                lamps[i * 9 + j] = circle;
-
-                lettera++;
-                if (lettera == '[') return;
-            }
-        }
-    }
-
-    @FXML
-    private void cripta(char lettera) {
-        this.enigma.ruota();
-        int criptata = enigma.cripta(lettera)-'a';
-        for (Circle lamp : lamps) {
-            lamp.setFill(Color.WHITE);
-        }
-        lamps[criptata].setFill(Color.YELLOW);
-        aggiornaPosizioni();
-    }
-
-    @FXML
-    private void onKeyPressed(KeyEvent event){
-        if (event.getCode().isLetterKey()){
-            int pos = event.getCode().getChar().charAt(0) - 'A';
-            buttons[pos].fire();
-            buttons[pos].requestFocus();
-        }
-    }
-
 
     @FXML
     public void onBtnMinusR3(ActionEvent actionEvent) {
@@ -159,11 +222,9 @@ public class EnigmaController {
     }
 
     @FXML
-
     public void onBtnPlusR3(ActionEvent actionEvent) {
         this.enigma.setRotazoine(2, true);
         this.aggiornaPosizioni();
-
     }
 
     @FXML
@@ -190,5 +251,15 @@ public class EnigmaController {
         this.aggiornaPosizioni();
     }
 
+    public void onBtnClearTxa(ActionEvent actionEvent) {
+        this.txaIn.clear();
+        this.txaOut.clear();
+    }
 
+    public void onBtnResetPos(ActionEvent actionEvent) {
+        this.enigma.setRotazoine(0,0);
+        this.enigma.setRotazoine(1,0);
+        this.enigma.setRotazoine(2,0);
+        aggiornaPosizioni();
+    }
 }
