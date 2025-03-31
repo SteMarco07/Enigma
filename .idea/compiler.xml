@@ -9,5 +9,8 @@
         <module name="enigma" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="enigma" target="21" />
+    </bytecodeTargetLevel>
   </component>
 </project>
