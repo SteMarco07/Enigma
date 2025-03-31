@@ -83,18 +83,18 @@ public class Enigma {
 
 
     private char criptaAvanti(char lettera) {
+        lettera = this.plugBoard.cifra(lettera);
         for (var i : this.rotori) {
             lettera = i.criptaAvanti(lettera);
         }
-        return this.plugBoard.cifra(lettera);
+        return lettera;
     }
 
     private char criptaIndietro(char lettera) {
-        lettera = this.plugBoard.cifra(lettera);
         for (int i = this.rotori.size() - 1; i >= 0; i--) {
             lettera = this.rotori.get(i).criptaIndietro(lettera);
         }
-        return lettera;
+        return this.plugBoard.cifra(lettera);
     }
 
     public char cripta(char lettera) {
@@ -133,6 +133,4 @@ public class Enigma {
     public void modificaCoppia(char vecchia, char nuova1, char nuova2) {
         this.plugBoard.modificaCoppia(vecchia, nuova1, nuova2);
     }
-
-
 }

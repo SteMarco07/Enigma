@@ -14,6 +14,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class EnigmaController {
 
@@ -33,12 +35,15 @@ public class EnigmaController {
     @FXML
     private GridPane gridButtons;
     @FXML
+    private GridPane gridButtons2;
+    @FXML
     private TextArea txaIn, txaOut;
 
     private Enigma enigma;
 
     private Button[] buttons;
     private Circle[] lamps;
+    private Button[] buttons2;
 
     private boolean isProcessingText = false;
     private int lastTextLength = 0;
@@ -48,6 +53,7 @@ public class EnigmaController {
         enigma = new Enigma("file/combinazioniRotori.csv", "file/combinazioniRiflessori.csv");
         gestisciGridButtons(60);
         gestisciGridLamps(25);
+        gestisciGridButtons2(60);
         chbRiflector.getItems().setAll(this.enigma.getCombinazioniRiflessori());
         chbRiflector.getSelectionModel().select(1);
         chbRotor1.getItems().setAll(this.enigma.getCombinazioniRotori());
@@ -80,6 +86,45 @@ public class EnigmaController {
             }
         }
     }
+
+
+    private char lettera1 = '\0';
+    private char lettera2 = '\0';
+
+
+    private void gestisciGridButtons2(int dim) {
+        buttons2 = new Button[26];
+        gridButtons2.setVgap(10);
+        gridButtons2.setHgap(10);
+
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 9; j++) {
+                int indice = i * 9 + j;
+                if (indice >= QWERTZ_ORDER.length) return;
+
+                char lettera = QWERTZ_ORDER[indice];
+                buttons2[indice] = new Button(String.valueOf(lettera));
+                buttons2[indice].setPrefWidth(dim);
+                buttons2[indice].setPrefHeight(dim / 2);
+
+                buttons2[indice].setOnAction(e -> gestisciClick(lettera));
+                gridButtons2.add(buttons2[indice], j, i);
+            }
+        }
+    }
+
+    private void gestisciClick(char lettera) {
+        if (lettera1 == '\0'){
+            lettera1 = lettera;
+        } else if (lettera2 == '\0') {
+            lettera2 = lettera;
+            enigma.aggiungiCoppia(lettera1, lettera2);
+            lettera1 = '\0';
+            lettera2 = '\0';
+        }
+    }
+
+
 
     private void gestisciGridLamps(int dim) {
         lamps = new Circle[26];
@@ -146,7 +191,7 @@ public class EnigmaController {
             if (txaOut.getText().length() % 5 == 0) {
                 txaOut.appendText(" ");
             }
-            
+
             txaOut.appendText(String.valueOf(encrypted));
         }
 
