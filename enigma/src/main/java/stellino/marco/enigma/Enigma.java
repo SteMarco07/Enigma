@@ -14,6 +14,7 @@ public class Enigma {
     private Riflessore riflessore;
     private final TreeMap<String, ArrayList<String>> combinazioniRotori;
     private final TreeMap<String , String> combinazioniRiflessori;
+    private PlugBoard plugBoard;
 
     public Enigma(String pRotori, String pRiflessori) throws IOException, FileNotFoundException {
         this.rotori = new ArrayList<>();
@@ -25,6 +26,7 @@ public class Enigma {
         this.rotori.add(new Rotore(this.combinazioniRotori.get("II").getFirst(), this.combinazioniRotori.get("II").getLast()));
         this.rotori.add(new Rotore(this.combinazioniRotori.get("III").getFirst(), this.combinazioniRotori.get("III").getLast()));
         this.riflessore = new Riflessore(this.combinazioniRiflessori.get("B"));
+        this.plugBoard = new PlugBoard();
         //System.out.println(this.combinazioniRotori);
         //System.out.println(this.combinazioniRiflessori);
 
@@ -84,10 +86,11 @@ public class Enigma {
         for (var i : this.rotori) {
             lettera = i.criptaAvanti(lettera);
         }
-        return lettera;
+        return this.plugBoard.cifra(lettera);
     }
 
     private char criptaIndietro(char lettera) {
+        lettera = this.plugBoard.cifra(lettera);
         for (int i = this.rotori.size() - 1; i >= 0; i--) {
             lettera = this.rotori.get(i).criptaIndietro(lettera);
         }
