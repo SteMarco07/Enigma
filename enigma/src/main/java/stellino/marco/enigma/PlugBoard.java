@@ -64,6 +64,14 @@ public class PlugBoard {
         return eseguibile;
     }
 
+    /**
+     * Resetta tutte le combinazioni
+     */
+    public void rimuoviTutto () {
+        combinazioni.clear();
+        coppie.clear();
+    }
+
     public void generaMappatureCasuali() {
         coppie.clear();
 

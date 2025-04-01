@@ -9,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -30,7 +31,9 @@ public class EnigmaController {
     };
 
     @FXML
-    private VBox vBoxCombo1, vBoxCombo2;
+    private VBox vBoxCombo1, vBoxCombo2, vBoxPB;
+    @FXML
+    private HBox hBoxPulsanti;
     @FXML
     private ChoiceBox<String> chbRiflector, chbRotor1, chbRotor2, chbRotor3;
     @FXML
@@ -43,6 +46,8 @@ public class EnigmaController {
     private GridPane gridButtons2;
     @FXML
     private TextArea txaIn, txaOut;
+    @FXML
+    private Button btnShowPB, btnClearPB;
 
     private Enigma enigma;
 
@@ -52,6 +57,8 @@ public class EnigmaController {
 
     private boolean isProcessingText = false;
     private int lastTextLength = 0;
+
+    private boolean mostraPlugBoard = false;
 
     /**
      * inizializza tutti gli elementi utilizzati dal programma
@@ -71,6 +78,11 @@ public class EnigmaController {
         chbRotor2.getSelectionModel().select(1);
         chbRotor3.getItems().setAll(this.enigma.getCombinazioniRotori());
         chbRotor3.getSelectionModel().select(2);
+        hBoxPulsanti.getChildren().remove(btnClearPB);
+        vBoxPB.setVisible(false);
+        vBoxPB.setDisable(true);
+        vBoxCombo1.setVisible(false);
+        vBoxCombo2.setVisible(false);
         aggiornaPosizioni();
         aggiornaRotoriListener();
         configuraTextArea();
@@ -154,9 +166,7 @@ public class EnigmaController {
     public void onBtnClearPB(ActionEvent actionEvent) {
         this.vBoxCombo1.getChildren().clear();
         this.vBoxCombo2.getChildren().clear();
-        for (var i : enigma.getCoppiePlugBoard()){
-            enigma.rimuoviCoppia(i.charAt(0));
-        }
+        this.enigma.rimuoviTutteCoppie();
     }
 
     /**
@@ -247,7 +257,7 @@ public class EnigmaController {
         c  = Character.toLowerCase(c);
         if (c >= 'a' && c <= 'z') {
             char encrypted = criptaChar(c);
-            if (txaOut.getText().length() % 5 == 0) {
+            if (txaOut.getText().length() % 6 == 0) {
                 txaOut.appendText(" ");
             }
 
@@ -422,6 +432,30 @@ public class EnigmaController {
         this.enigma.setRotazione(1,0);
         this.enigma.setRotazione(2,0);
         aggiornaPosizioni();
+    }
+
+    /**
+     *  gestisce la visibilità della plugboard
+     * @param actionEvent
+     */
+    public void onBtnShowPB(ActionEvent actionEvent) {
+        mostraPlugBoard = !mostraPlugBoard;
+        if (mostraPlugBoard) {
+            btnShowPB.setText("Hide plugboard");
+            hBoxPulsanti.getChildren().add(btnClearPB);
+            vBoxCombo1.setVisible(true);
+            vBoxCombo2.setVisible(true);
+            vBoxPB.setVisible(true);
+            vBoxPB.setDisable(false);
+        } else {
+            btnShowPB.setText("Show plugboard");
+            hBoxPulsanti.getChildren().remove(btnClearPB);
+            vBoxCombo1.setVisible(false);
+            vBoxCombo2.setVisible(false);
+            vBoxPB.setDisable(true);
+            vBoxPB.setVisible(false);
+        }
+
     }
 
 

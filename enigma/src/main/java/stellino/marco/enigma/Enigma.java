@@ -217,6 +217,13 @@ public class Enigma {
     }
 
     /**
+     * Rimuove tutte le combinazioni della plugboard
+     */
+    public void rimuoviTutteCoppie() {
+        plugBoard.rimuoviTutto();
+    }
+
+    /**
      * restituisce tutte le coppie della plugboard
      * @return arraylist delle coppie della plugboard
      */
