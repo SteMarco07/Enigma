@@ -9,7 +9,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -31,9 +30,7 @@ public class EnigmaController {
     };
 
     @FXML
-    private VBox vBoxCombo1, vBoxCombo2, vBoxPB;
-    @FXML
-    private HBox hBoxPulsanti;
+    private VBox vBoxCombo1, vBoxCombo2;
     @FXML
     private ChoiceBox<String> chbRiflector, chbRotor1, chbRotor2, chbRotor3;
     @FXML
@@ -46,8 +43,6 @@ public class EnigmaController {
     private GridPane gridButtons2;
     @FXML
     private TextArea txaIn, txaOut;
-    @FXML
-    private Button btnShowPB, btnClearPB;
 
     private Enigma enigma;
 
@@ -58,8 +53,10 @@ public class EnigmaController {
     private boolean isProcessingText = false;
     private int lastTextLength = 0;
 
-    private boolean mostraPlugBoard = false;
-
+    /**
+     * inizializza tutti gli elementi utilizzati dal programma
+     * @throws IOException eccezione di apertura dei file
+     */
     @FXML
     public void initialize() throws IOException {
         enigma = new Enigma("file/combinazioniRotori.csv", "file/combinazioniRiflessori.csv");
@@ -74,16 +71,15 @@ public class EnigmaController {
         chbRotor2.getSelectionModel().select(1);
         chbRotor3.getItems().setAll(this.enigma.getCombinazioniRotori());
         chbRotor3.getSelectionModel().select(2);
-        hBoxPulsanti.getChildren().remove(btnClearPB);
-        vBoxPB.setVisible(false);
-        vBoxPB.setDisable(true);
-        vBoxCombo1.setVisible(false);
-        vBoxCombo2.setVisible(false);
         aggiornaPosizioni();
         aggiornaRotoriListener();
         configuraTextArea();
     }
 
+    /**
+     * crea e gestisce graficamente una tastiera formata da 26 pulsanti
+     * @param dim dimensione dinale dellla tastiera
+     */
     private void gestisciGridButtons(int dim) {
         buttons = new Button[26];
         gridButtons.setVgap(10);
@@ -109,6 +105,10 @@ public class EnigmaController {
     private char lettera2 = '\0';
 
 
+    /**
+     * crea e gestisce graficamente una seconda tastiera formata da 26 pulsanti
+     * @param dim dimensione dinale dellla tastiera
+     */
     private void gestisciGridButtons2(int dim) {
         buttons2 = new Button[26];
         gridButtons2.setVgap(10);
@@ -130,6 +130,10 @@ public class EnigmaController {
         }
     }
 
+    /**
+     * gestisce l'inserimento delle coppie dalla tastiera della plugboard
+     * @param lettera lettera premuta(pulsante premuto a cui corrisponde una lettera)
+     */
     private void gestisciClick(char lettera) {
         if (lettera1 == '\0'){
             lettera1 = lettera;
@@ -143,12 +147,21 @@ public class EnigmaController {
 
     }
 
+    /**
+     * elimina le combinazioni della plugboard
+     * @param actionEvent evento della pressione del pulsante
+     */
     public void onBtnClearPB(ActionEvent actionEvent) {
         this.vBoxCombo1.getChildren().clear();
         this.vBoxCombo2.getChildren().clear();
-        this.enigma.rimuoviTutteCoppie();
+        for (var i : enigma.getCoppiePlugBoard()){
+            enigma.rimuoviCoppia(i.charAt(0));
+        }
     }
 
+    /**
+     * aggiorna le coppie della plugboard
+     */
     private void aggiornaCombinazioni() {
         ArrayList <String> combinazioni = this.enigma.getCoppiePlugBoard();
         Label l = new Label(combinazioni.getLast());
@@ -161,7 +174,10 @@ public class EnigmaController {
     }
 
 
-
+    /**
+     * crea e gestisce graficamente la griglia di lampadine
+     * @param dim dimensione finale della grigliua di lampadine
+     */
     private void gestisciGridLamps(int dim) {
         lamps = new Circle[26];
         gridLamps.setVgap(10);
@@ -188,6 +204,9 @@ public class EnigmaController {
         }
     }
 
+    /**
+     * crea e gestisce graficamente i campi di testo in input e output
+     */
     private void configuraTextArea() {
         // Filtra l'input solo per lettere e converte in maiuscolo
         txaIn.textProperty().addListener((obs, oldVal, newVal) -> {
@@ -219,12 +238,16 @@ public class EnigmaController {
         });
     }
 
+    /**
+     * cripta il carattere e lo aggiunge all'output
+     * @param c carattere
+     */
     private void processaCarattere(char c) {
         // Cripta il carattere e aggiungi all'output
         c  = Character.toLowerCase(c);
         if (c >= 'a' && c <= 'z') {
             char encrypted = criptaChar(c);
-            if (txaOut.getText().length() % 6 == 0) {
+            if (txaOut.getText().length() % 5 == 0) {
                 txaOut.appendText(" ");
             }
 
@@ -233,6 +256,11 @@ public class EnigmaController {
 
     }
 
+    /**
+     * cripta un carattere e gestisce l'accensione dellla rispettiva lampada
+     * @param lettera lettera da criptare
+     * @return lettera criptata
+     */
     private char criptaChar(char lettera) {
         this.enigma.ruota();
         lettera = enigma.cripta(lettera);
@@ -254,11 +282,20 @@ public class EnigmaController {
     }
 
     // Modifica i metodi esistenti per usare processaCarattere
+
+    /**
+     * cripta una lettera e lo aggiunge al campo di testo dell'input
+     * @param lettera
+     */
     @FXML
     private void cripta(char lettera) {
         txaIn.appendText(String.valueOf(lettera));
     }
 
+    /**
+     * gestisce la pressione di un pulsante lettera(tastiera fisica o grafica)
+     * @param event evento dell apressione di un tasto
+     */
     @FXML
     private void onKeyPressed(KeyEvent event) {
         if (event.getCode().isLetterKey()) {
@@ -269,22 +306,33 @@ public class EnigmaController {
                     break;
                 }
             }
+            System.out.println("ciao sono entrato");
             event.consume();
         }
     }
 
-    // Resto del codice invariato...
+    /**
+     * aggiorna la posizione dei tre rotori
+     */
     private void aggiornaPosizioni() {
-        lblPosR1.setText(String.valueOf((char)('A' + this.enigma.getRotazoine(0))));
-        lblPosR2.setText(String.valueOf((char)('A' + this.enigma.getRotazoine(1))));
-        lblPosR3.setText(String.valueOf((char)('A' + this.enigma.getRotazoine(2))));
+        lblPosR1.setText(String.valueOf((char)('A' + this.enigma.getRotazione(0))));
+        lblPosR2.setText(String.valueOf((char)('A' + this.enigma.getRotazione(1))));
+        lblPosR3.setText(String.valueOf((char)('A' + this.enigma.getRotazione(2))));
     }
 
+    /**
+     * aggiorna la configurazione di un rotore
+     * @param nRotore numero del reotore
+     * @param val valore di configurazione di un rotore
+     */
     private void aggiornaRotore(int nRotore, String val) {
         enigma.modificaCombinazioneRotore(nRotore, val);
         aggiornaPosizioni();
     }
 
+    /**
+     * permette l'interazione grafica dei choicebox e la conseguente modifica delle configurazioi dei rotori
+     */
     private void aggiornaRotoriListener() {
         chbRotor1.getSelectionModel().selectedItemProperty().addListener(
                 (obs, oldVal, newVal) -> aggiornaRotore(0, newVal));
@@ -296,72 +344,85 @@ public class EnigmaController {
                 (obs, oldVal, newVal) -> enigma.modificaCombinazioneRiflessori(newVal));
     }
 
+    /**
+     * decremento della posizione del rotore 3
+     * @param actionEvent pressione del pulsante -
+     */
     @FXML
     public void onBtnMinusR3(ActionEvent actionEvent) {
-        this.enigma.setRotazoine(2, false);
+        this.enigma.setRotazione(2, false);
         this.aggiornaPosizioni();
     }
 
+    /**
+     * incremento della posizione del rotore 3
+     * @param actionEvent pressione del pulsante +
+     */
     @FXML
     public void onBtnPlusR3(ActionEvent actionEvent) {
-        this.enigma.setRotazoine(2, true);
+        this.enigma.setRotazione(2, true);
         this.aggiornaPosizioni();
     }
 
+    /**
+     * decremento della posizione del rotore 2
+     * @param actionEvent pressione del pulsante -
+     */
     @FXML
     public void onBtnMinusR2(ActionEvent actionEvent) {
-        this.enigma.setRotazoine(1, false);
+        this.enigma.setRotazione(1, false);
         this.aggiornaPosizioni();
     }
 
+    /**
+     * incremento della posizione del rotore 2
+     * @param actionEvent pressione del pulsante +
+     */
     @FXML
     public void onBtnPlusR2(ActionEvent actionEvent) {
-        this.enigma.setRotazoine(1, true);
+        this.enigma.setRotazione(1, true);
         this.aggiornaPosizioni();
     }
 
+    /**
+     * decremento della posizione del rotore 1
+     * @param actionEvent pressione del pulsante -
+     */
     @FXML
     public void onBtnMinusR1(ActionEvent actionEvent) {
-        this.enigma.setRotazoine(0, false);
+        this.enigma.setRotazione(0, false);
         this.aggiornaPosizioni();
     }
 
+    /**
+     * incremento della posizione del rotore 1
+     * @param actionEvent pressione del pulsante +
+     */
     @FXML
     public void onBtnPlusR1(ActionEvent actionEvent) {
-        this.enigma.setRotazoine(0, true);
+        this.enigma.setRotazione(0, true);
         this.aggiornaPosizioni();
     }
 
+    /**
+     * gestisce il pulsante cleartext, svuota i campi di testo
+     * @param actionEvent pressione del pulsante cleartext
+     */
     public void onBtnClearTxa(ActionEvent actionEvent) {
         this.txaIn.clear();
         this.txaOut.clear();
     }
 
+    /**
+     * gestisce il pulsante resetpos, ripristina le posizioni dei rotori
+     * @param actionEvent pressione del pulsante resetpos
+     */
     public void onBtnResetPos(ActionEvent actionEvent) {
-        this.enigma.setRotazoine(0,0);
-        this.enigma.setRotazoine(1,0);
-        this.enigma.setRotazoine(2,0);
+        this.enigma.setRotazione(0,0);
+        this.enigma.setRotazione(1,0);
+        this.enigma.setRotazione(2,0);
         aggiornaPosizioni();
     }
 
 
-    public void onBtnShowPB(ActionEvent actionEvent) {
-        mostraPlugBoard = !mostraPlugBoard;
-        if (mostraPlugBoard) {
-            btnShowPB.setText("Hide plugboard");
-            hBoxPulsanti.getChildren().add(btnClearPB);
-            vBoxCombo1.setVisible(true);
-            vBoxCombo2.setVisible(true);
-            vBoxPB.setVisible(true);
-            vBoxPB.setDisable(false);
-        } else {
-            btnShowPB.setText("Show plugboard");
-            hBoxPulsanti.getChildren().remove(btnClearPB);
-            vBoxCombo1.setVisible(false);
-            vBoxCombo2.setVisible(false);
-            vBoxPB.setDisable(true);
-            vBoxPB.setVisible(false);
-        }
-
-    }
 }

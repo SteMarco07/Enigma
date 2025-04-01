@@ -4,21 +4,37 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
+/**
+ * questa classe rappresenta la plugboard della macchina enigma
+ */
+
 public class PlugBoard {
     private HashMap<Character, Character> coppie;
     private ArrayList<String> combinazioni;
 
+    /**
+     * costruisce una plugboard
+     */
     public PlugBoard() {
         coppie = new HashMap<>();
         combinazioni = new ArrayList<>();
     }
 
-    //Non funziona
+    /**
+     * ritorna le coppie di lettere
+     * @return arraylist delle coppie di lettere
+     */
     public ArrayList<String> getCombinazioni() {
         //System.out.println(combinazioni);
         return this.combinazioni;
     }
 
+    /**
+     * permette l'aggiunta di una coppia di lettere della plugboard
+     * @param lettera1 la prima lettera
+     * @param lettera2 la seconda lettera
+     * @return ritorna true se è stato possibile aggiungere la coppia o false se non è stato possibile
+     */
     public boolean aggiungiCoppia(char lettera1, char lettera2) {
         boolean eseguibile = true;
         char l1 = Character.toLowerCase(lettera1);
@@ -65,11 +81,20 @@ public class PlugBoard {
         }
     }
 
+    /**
+     * cifra la lettera
+     * @param lettera lettera da cifrare
+     * @return la lettera cifrata
+     */
     public char cifra(char lettera) {
         char lower = Character.toLowerCase(lettera);
         return coppie.getOrDefault(lower, lower);
     }
 
+    /**
+     * rimuove una coppia della plugboard passando in input la prima delle due lettere della coppia
+     * @param lettera la prima delle due lettere di una coppia
+     */
     public void rimuoviCoppia(char lettera) {
         char l = Character.toLowerCase(lettera);
         if (!coppie.containsKey(l)) return;
@@ -77,19 +102,18 @@ public class PlugBoard {
         char associato = coppie.get(l);
         coppie.remove(l);
         coppie.remove(associato);
-        System.out.println(""+l+associato);
-        combinazioni.remove(""+l+associato);
-        combinazioni.remove(""+associato+l);
+        //System.out.println(""+l+associato);
+        if (combinazioni.remove(""+l+associato)) {
+            System.out.println("rimosso");
+        }
     }
 
     /**
-     * Resetta tutte le combinazioni
+     * modifica una coppia gia esistende
+     * @param vecchiaLettera prima lettera di una coppia esistende
+     * @param nuovaLettera1 nuova prima lettera della coppia
+     * @param nuovaLettera2 nuova seconda lettera della coppia
      */
-    public void rimuoviTutto () {
-        combinazioni.clear();
-        coppie.clear();
-    }
-
     public void modificaCoppia(char vecchiaLettera, char nuovaLettera1, char nuovaLettera2) {
         char vecchia = Character.toLowerCase(vecchiaLettera);
         char nuova1 = Character.toLowerCase(nuovaLettera1);
