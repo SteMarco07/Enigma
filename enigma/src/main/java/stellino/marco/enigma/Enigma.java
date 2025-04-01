@@ -130,6 +130,13 @@ public class Enigma {
         this.plugBoard.rimuoviCoppia(lettera);
     }
 
+    /**
+     * Rimuove tutte le combinazioni della plugboard
+     */
+    public void rimuoviTutteCoppie() {
+        plugBoard.rimuoviTutto();
+    }
+
     public void modificaCoppia(char vecchia, char nuova1, char nuova2) {
         this.plugBoard.modificaCoppia(vecchia, nuova1, nuova2);
     }

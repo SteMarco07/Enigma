@@ -77,10 +77,17 @@ public class PlugBoard {
         char associato = coppie.get(l);
         coppie.remove(l);
         coppie.remove(associato);
-        //System.out.println(""+l+associato);
-        if (combinazioni.remove(""+l+associato)) {
-            System.out.println("rimosso");
-        }
+        System.out.println(""+l+associato);
+        combinazioni.remove(""+l+associato);
+        combinazioni.remove(""+associato+l);
+    }
+
+    /**
+     * Resetta tutte le combinazioni
+     */
+    public void rimuoviTutto () {
+        combinazioni.clear();
+        coppie.clear();
     }
 
     public void modificaCoppia(char vecchiaLettera, char nuovaLettera1, char nuovaLettera2) {

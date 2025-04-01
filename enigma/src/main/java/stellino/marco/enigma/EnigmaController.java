@@ -146,9 +146,7 @@ public class EnigmaController {
     public void onBtnClearPB(ActionEvent actionEvent) {
         this.vBoxCombo1.getChildren().clear();
         this.vBoxCombo2.getChildren().clear();
-        for (var i : enigma.getCoppiePlugBoard()){
-            enigma.rimuoviCoppia(i.charAt(0));
-        }
+        this.enigma.rimuoviTutteCoppie();
     }
 
     private void aggiornaCombinazioni() {
@@ -226,7 +224,7 @@ public class EnigmaController {
         c  = Character.toLowerCase(c);
         if (c >= 'a' && c <= 'z') {
             char encrypted = criptaChar(c);
-            if (txaOut.getText().length() % 5 == 0) {
+            if (txaOut.getText().length() % 6 == 0) {
                 txaOut.appendText(" ");
             }
 
